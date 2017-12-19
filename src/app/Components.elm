@@ -33,7 +33,6 @@ landingBody posts =
         ]
 
 
-
 postCard : Post -> Html msg
 postCard post =
     div [ class "col s12 m6 l4" ]
@@ -45,7 +44,6 @@ postCard post =
                 ]
              ]
         ]
-
 
 
 readPostBody : Post -> Html msg
@@ -81,7 +79,6 @@ userHeader user =
         ]
 
 
-
 createPostBody : Html msg
 createPostBody =
     main_ [ class "container " ]
@@ -92,4 +89,63 @@ createPostBody =
                 , a [ class "btn right" ] [ text "Create" ]
                 ]
             ]
+        ]
+
+
+
+
+
+
+emailInput : Html msg
+emailInput =
+    div [ class "input-field" ]
+       [ i [ class "material-icons prefix" ] [ text "email" ]
+       , input [ placeholder "Email", type_ "text" ] []
+       ]
+
+
+passwordInput : Html msg
+passwordInput =
+    div [ class "input-field" ]
+       [ i [ class "material-icons prefix" ] [ text "lock" ]
+       , input [ placeholder "Password", type_ "password" ] []
+       ]
+
+
+passwordAgain : Html msg
+passwordAgain =
+    div [ class "input-field" ]
+       [ i [ class "material-icons prefix" ] [ text "lock" ]
+       , input [ placeholder "Password Again", type_ "password" ] []
+       ]
+
+
+authentication: List (Html msg) -> Html msg
+authentication body =
+    main_ [ class "container " ]
+        [ div [ class "full-height row valign-wrapper" ]
+            [ Html.form [ class "col s12 m4 offset-m4" ]
+                body
+            ]
+        ]
+
+
+login : Html msg
+login =
+    authentication
+        [ emailInput
+        , passwordInput
+        , a [ class "btn right" ] [ text "Login" ]
+        ]
+
+
+
+
+signUp : Html msg
+signUp =
+    authentication
+        [ emailInput
+        , passwordInput
+        , passwordAgain
+        , a [ class "btn right" ] [ text "Sign Up" ]
         ]
