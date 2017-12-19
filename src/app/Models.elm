@@ -2,6 +2,9 @@ module Models exposing (..)
 
 import Lorem
 
+type alias User =
+    { email : String
+    }
 
 type alias Post =
     { id: String
@@ -12,12 +15,14 @@ type alias Post =
 
 type alias Model =
     { posts: List Post
+    , user: User
     }
 
 
 initialModel : Model
 initialModel =
     { posts = List.range 1 10 |> List.map toString |> List.map initialPost
+    , user = { email = "email@gmail.com"}
     }
 
 

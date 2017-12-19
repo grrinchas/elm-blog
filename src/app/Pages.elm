@@ -19,7 +19,11 @@ readPost id model =
         Nothing ->
             error "404 Not Found"
 
-
-
 error : a -> Html msg
 error err = Components.error err
+
+
+createPost : Model -> Html msg
+createPost model =
+    layout (userHeader model.user) createPostBody
+

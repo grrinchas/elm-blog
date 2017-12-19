@@ -8,8 +8,7 @@ import Pages
 main : Program Never Model msg
 main = program
         { init = (initialModel, Cmd.none )
---      - view = Pages.landing
-        , view =  Pages.readPost "3"
+        , view =  Pages.createPost
         , update = \msg model -> (model, Cmd.none)
         , subscriptions = \model -> Sub.none
         }
