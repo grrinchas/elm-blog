@@ -45,3 +45,23 @@ postCard post =
                 ]
              ]
         ]
+
+
+
+readPostBody : Post -> Html msg
+readPostBody post =
+    main_ [ class "container" ]
+        [ div [ class "row" ]
+            [ div [ class "col l6 offset-l3" ]
+                [ h1 [] [ text <| "ID " ++ post.id ++ ": "++ post.title  ]
+                , List.repeat 10 post.body |> List.map (\par -> p [] [ text par ]) |> div []
+                ]
+            ]
+        ]
+
+
+
+
+error : a -> Html msg
+error a =
+    main_ [ class "container" ] [ text <| toString a ]
