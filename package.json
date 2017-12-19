@@ -10,7 +10,7 @@
         "start": "npm-run-all --parallel start:dev",
         "build": "babel-node build_scripts/build.js",
         "postbuild": "babel-node build_scripts/prodServer.js",
-        "format": "elm-format --yes"
+        "format": "elm-format --yes "
     },
     "devDependencies": {
         "babel-cli": "^6.26.0",

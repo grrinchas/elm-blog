@@ -1,5 +1,20 @@
 module Main exposing (main)
 
-import Html exposing (h1, text)
+import Html exposing (program)
+import Models exposing (..)
+import Pages
 
-main = h1 [] [ text "Welcome DG elm starter kit!"]
+
+main : Program Never Model msg
+main = program
+        { init = (initialModel, Cmd.none )
+        , view =  Pages.landing
+        , update = \msg model -> (model, Cmd.none)
+        , subscriptions = \model -> Sub.none
+        }
+
+
+
+
+
+

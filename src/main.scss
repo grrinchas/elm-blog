@@ -1,7 +1,30 @@
-
 // Do not remove this
 $roboto-font-path: "~materialize-css/dist/fonts/roboto/";
 @import "../node_modules/materialize-css/sass/materialize";
+
+.card {
+    cursor: pointer;
+}
+
+
+.full-height {
+    height: 100%;
+}
+
+body, html, #app, main{
+    @extend .full-height;
+}
+
+main {
+    min-width: 620px;
+
+}
+
+
+
+textarea {
+    height: 500px;
+}
 
 
 
