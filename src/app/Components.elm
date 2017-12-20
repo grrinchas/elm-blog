@@ -2,7 +2,10 @@ module Components exposing (..)
 
 import Html exposing (..)
 import Html.Attributes exposing (..)
+import Html.Events exposing (onClick)
+import Messages exposing (Msg(UpdateRoute))
 import Models exposing (Post, User)
+import Routes exposing (..)
 
 
 layout : Html msg -> Html msg -> Html msg
@@ -17,26 +20,24 @@ authHeader =
         [ nav []
             [ div [ class "nav-wrapper container" ]
                 [ ul [ class "right" ]
-                    [ li [] [ a [class "btn" ] [ text "Login" ] ]
-                    , li [] [ a [class "btn" ] [ text "Sign Up" ] ]
+                    [ li []
+--                      [ a [class "btn" ] [ text "Login" ] ]
+                        [ a [href <| path LoginRoute, class "btn" ] [ text "Login" ] ]
+                    , li []
+--                      [ a [class "btn" ] [ text "Sign Up" ] ]
+                        [ a [href <| path SignUpRoute, class "btn" ] [ text "Sign Up" ] ]
                     ]
                 ]
             ]
         ]
 
 
-landingBody : List Post -> Html msg
-landingBody posts =
-    main_ [ class "container" ]
-        [ List.map postCard posts
-          |> div [ class "row" ]
-        ]
-
-
-postCard : Post -> Html msg
+--postCard : Post -> Html msg
+postCard : Post -> Html Msg
 postCard post =
     div [ class "col s12 m6 l4" ]
-        [ div [ class "card small hoverable grey lighten-4" ]
+--      [ div [ class "card small hoverable grey lighten-4" ]
+        [ div [ onClick <| UpdateRoute <| ReadPostRoute post.id, class "card small hoverable grey lighten-4" ]
              [ div [ class "card-content" ]
                 [ span [ class "card-title medium" ]
                     [ text <| "ID " ++ post.id ++ ": "++ post.title ]
@@ -44,6 +45,17 @@ postCard post =
                 ]
              ]
         ]
+
+
+--landingBody : List Post -> Html msg
+landingBody : List Post -> Html Msg
+landingBody posts =
+    main_ [ class "container" ]
+        [ List.map postCard posts
+          |> div [ class "row" ]
+        ]
+
+
 
 
 readPostBody : Post -> Html msg
@@ -92,10 +104,6 @@ createPostBody =
         ]
 
 
-
-
-
-
 emailInput : Html msg
 emailInput =
     div [ class "input-field" ]
@@ -137,8 +145,6 @@ login =
         , passwordInput
         , a [ class "btn right" ] [ text "Login" ]
         ]
-
-
 
 
 signUp : Html msg
