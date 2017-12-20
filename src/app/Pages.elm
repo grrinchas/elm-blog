@@ -7,17 +7,22 @@ import Models exposing (..)
 import Routes exposing (..)
 
 
--- landing : Model -> Html msg
 landing : Model -> Html Msg
 landing model =
-    layout authHeader <| landingBody model.posts
+    --  layout authHeader <| landingBody model.posts
+    Maybe.map userHeader model.user
+        |> Maybe.withDefault authHeader
+        |> flip layout (landingBody model.posts)
 
 
 readPost : String -> Model -> Html msg
 readPost id model =
     case List.head <| List.filter (\post -> post.id == id) model.posts of
         Just post ->
-            layout authHeader <| readPostBody post
+            --          layout authHeader <| readPostBody post
+            Maybe.map userHeader model.user
+                |> Maybe.withDefault authHeader
+                |> flip layout (readPostBody post)
 
         Nothing ->
             error "404 Not Found"
@@ -30,7 +35,13 @@ error err =
 
 createPost : Model -> Html msg
 createPost model =
-    layout (userHeader model.user) createPostBody
+    --  layout (userHeader model.user) createPostBody
+    case model.user of
+        Just user ->
+            layout (userHeader user) createPostBody
+
+        Nothing ->
+            error "404 Not Found"
 
 
 login : Model -> Html msg
