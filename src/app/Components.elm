@@ -21,10 +21,8 @@ authHeader =
             [ div [ class "nav-wrapper container" ]
                 [ ul [ class "right" ]
                     [ li []
---                      [ a [class "btn" ] [ text "Login" ] ]
                         [ a [href <| path LoginRoute, class "btn" ] [ text "Login" ] ]
                     , li []
---                      [ a [class "btn" ] [ text "Sign Up" ] ]
                         [ a [href <| path SignUpRoute, class "btn" ] [ text "Sign Up" ] ]
                     ]
                 ]
@@ -32,11 +30,9 @@ authHeader =
         ]
 
 
---postCard : Post -> Html msg
 postCard : Post -> Html Msg
 postCard post =
     div [ class "col s12 m6 l4" ]
---      [ div [ class "card small hoverable grey lighten-4" ]
         [ div [ onClick <| UpdateRoute <| ReadPostRoute post.id, class "card small hoverable grey lighten-4" ]
              [ div [ class "card-content" ]
                 [ span [ class "card-title medium" ]
@@ -81,7 +77,6 @@ userHeader user =
     header []
         [ nav []
             [ div [ class "nav-wrapper container" ]
---              [ a [class "btn" ] [ text "New Post" ]
                 [ a [href <| path CreatePostRoute, class "btn" ] [ text "New Post" ]
                 , ul [ class "right" ]
                     [ li [] [ text user.email ]

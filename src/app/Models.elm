@@ -25,7 +25,7 @@ type alias Model =
 initialModel : Model
 initialModel =
     { posts = List.range 1 10 |> List.map toString |> List.map initialPost
-    , user = Just { email = "email@gmail.com"}
+    , user = Nothing   -- or Just { email = "email@gmail.com"}
     , route = HomeRoute
     }
 

@@ -18,19 +18,22 @@ main = Navigation.program OnLocationChange
         }
 
 
+
 reroute: Model -> (Model, List (Cmd msg))
 reroute model =
     case (model.route, model.user) of
-        (CreatePostRoute, Nothing) ->
-            (model, [Navigation.modifyUrl <| path ErrorRoute])
-
         (LoginRoute,  Just _)->
             (model, [Navigation.modifyUrl <| path HomeRoute])
 
         (SignUpRoute, Just _)->
             (model, [Navigation.modifyUrl <| path HomeRoute])
+
+        (CreatePostRoute, Nothing) ->
+            ({model | route = ErrorRoute}, [Cmd.none])
+
         _ ->
             (model, [Cmd.none])
+
 
 
 
