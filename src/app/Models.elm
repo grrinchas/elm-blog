@@ -1,6 +1,7 @@
 module Models exposing (..)
 
 import Lorem
+import RemoteData exposing (RemoteData(NotAsked), WebData)
 import Routes exposing (Route(HomeRoute))
 
 
@@ -24,12 +25,19 @@ type alias Form =
     , postBody : String
     }
 
+type alias Token =
+    { accessToken : String
+    , idToken : String
+    , tokenType : String
+    , expiresIn : Int
+    }
 
 type alias Model =
     { posts : List Post
     , user : Maybe User
     , route : Route
     , form : Form
+    , token : WebData Token
     }
 
 
@@ -39,6 +47,7 @@ initialModel =
     , user = Nothing -- or Just { email = "email@gmail.com"}
     , route = HomeRoute
     , form = { email = "", password = "", passwordAgain = "", postTitle = "", postBody = "" }
+    , token = NotAsked
     }
 
 

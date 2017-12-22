@@ -1,6 +1,6 @@
 module Messages exposing (..)
 
-import Models exposing (Form)
+import Models exposing (Form, Token)
 import Navigation exposing (Location)
 import Routes exposing (Route)
 
@@ -13,3 +13,5 @@ type Msg
     | Login
     | Logout
     | SignUp
+    | OnUserSignUp String
+    | OnUserLogin Token

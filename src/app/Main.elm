@@ -1,5 +1,6 @@
 module Main exposing (main)
 
+import Api
 import Messages exposing (..)
 import Models exposing (..)
 import Navigation exposing (Location, modifyUrl)
@@ -81,8 +82,7 @@ update msg model =
             ( { model | form = form }, Cmd.none )
 
         SignUp ->
-            updateRoute LoginRoute model
-                |> Tuple.mapSecond batch
+            ( model, Api.signUp model.form)
 
         Login ->
             ( { model | user = Just { email = model.form.email } }, [ Cmd.none ] )
@@ -100,3 +100,9 @@ update msg model =
                 |> andThen resetForm
                 |> andThen (updateRoute HomeRoute)
                 |> Tuple.mapSecond batch
+
+        OnUserSignUp string ->
+            let _ = Debug.log "" string in (model, Cmd.none)
+
+
+
