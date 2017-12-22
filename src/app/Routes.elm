@@ -41,7 +41,7 @@ path route =
         HomeRoute ->
             "#"
 
-        ReadPostRoute id->
+        ReadPostRoute id ->
             "#posts/" ++ id
 
         CreatePostRoute ->

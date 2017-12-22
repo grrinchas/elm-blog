@@ -14,7 +14,7 @@ landing model =
         |> flip layout (landingBody model.posts)
 
 
-readPost : String -> Model -> Html msg
+readPost : String -> Model -> Html Msg
 readPost id model =
     case List.head <| List.filter (\post -> post.id == id) model.posts of
         Just post ->
@@ -26,11 +26,11 @@ readPost id model =
             error "404 Not Found"
 
 
-createPost : Model -> Html msg
+createPost : Model -> Html Msg
 createPost model =
     case model.user of
         Just user ->
-            layout (userHeader user) createPostBody
+            layout (userHeader user) (createPostBody model.form)
 
         Nothing ->
             error "404 Not Found"
@@ -41,14 +41,14 @@ error err =
     Components.error err
 
 
-login : Model -> Html msg
+login : Model -> Html Msg
 login model =
-    Components.login
+    Components.login model.form
 
 
-signUp : Model -> Html msg
+signUp : Model -> Html Msg
 signUp model =
-    Components.signUp
+    Components.signUp model.form
 
 
 view : Model -> Html Msg
