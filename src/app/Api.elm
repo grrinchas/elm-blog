@@ -1,11 +1,11 @@
 module Api exposing (..)
 
-import Decoders exposing (decodeToken)
+import Decoders exposing (decodeToken, decodeUser)
 import Encoders
 import Http exposing (jsonBody)
 import Json.Decode
 import Messages exposing (Msg)
-import Models exposing (Form)
+import Models exposing (Form, Token, User)
 import RemoteData
 
 signUpUrl : String
@@ -17,15 +17,36 @@ loginUrl : String
 loginUrl =
     "https://nookit.eu.auth0.com/oauth/token"
 
-signUp : Form -> Cmd Msg
-signUp user =
-    Http.post signUpUrl (jsonBody <| Encoders.signUp user) Json.Decode.string
+fetchAccount : Form -> Cmd Msg
+fetchAccount user =
+    Http.post signUpUrl (jsonBody <| Encoders.signUp user) (Json.Decode.succeed ())
         |> RemoteData.sendRequest
-        |> Cmd.map Messages.OnUserSignUp
+        |> Cmd.map Messages.OnFetchAccount
 
 
-login : Form -> Cmd Msg
-login form =
+fetchToken : Form -> Cmd Msg
+fetchToken form =
     Http.post loginUrl (jsonBody <| Encoders.login form) decodeToken
         |> RemoteData.sendRequest
-        |> Cmd.map Messages.OnUserLogin
+        |> Cmd.map Messages.OnFetchToken
+
+
+authorisedRequest : Token -> Http.Request User
+authorisedRequest token =
+    Http.request
+        { method = "GET"
+        , headers = [ Http.header "Authorization" <| "Bearer " ++ token.accessToken ]
+        , url = "https://nookit.eu.auth0.com/userinfo"
+        , body = Http.emptyBody
+        , expect = Http.expectJson decodeUser
+        , timeout = Nothing
+        , withCredentials = False
+        }
+
+
+fetchUser : Token -> Cmd Msg
+fetchUser token =
+    authorisedRequest token
+        |> RemoteData.sendRequest
+        |> Cmd.map Messages.OnFetchUser
+

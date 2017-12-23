@@ -34,20 +34,22 @@ type alias Token =
 
 type alias Model =
     { posts : List Post
-    , user : Maybe User
-    , route : Route
     , form : Form
+    , route : Route
+    , user : WebData User
     , token : WebData Token
+    , account : WebData ()
     }
 
 
 initialModel : Model
 initialModel =
     { posts = List.range 1 10 |> List.map toString |> List.map initialPost
-    , user = Nothing -- or Just { email = "email@gmail.com"}
-    , route = HomeRoute
     , form = { email = "", password = "", passwordAgain = "", postTitle = "", postBody = "" }
+    , route = HomeRoute
+    , user = NotAsked
     , token = NotAsked
+    , account = NotAsked
     }
 
 

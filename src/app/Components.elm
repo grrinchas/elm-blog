@@ -11,7 +11,40 @@ import Routes exposing (..)
 layout : Html msg -> Html msg -> Html msg
 layout header main =
     div []
-        [ header, main ]
+        [ header, main]
+
+
+withLoader : Html msg -> Html msg
+withLoader view = div [class "with-loader"] [view, loading]
+
+
+loaderPart : String -> Html msg
+loaderPart color =
+    div [ class ("spinner-layer spinner-" ++ color) ]
+        [ div [ class "circle-clipper left" ]
+            [ div [ class "circle" ] []
+            ]
+        , div [ class "gap-patch" ]
+            [ div [ class "circle" ] []
+            ]
+        , div [ class "circle-clipper right" ]
+            [ div [ class "circle" ] []
+            ]
+        ]
+
+
+loading : Html msg
+loading =
+    div [ class "loading-wrapper" ]
+        [ div [ class "loader" ]
+            [ div [ class "preloader-wrapper active" ] <|
+                List.map
+                    loaderPart
+                    [ "blue", "red", "yellow", "green" ]
+            ]
+        ]
+
+
 
 
 authHeader : Html msg
@@ -150,6 +183,7 @@ passwordAgain form =
             ]
             []
         ]
+
 
 
 authentication : List (Html Msg) -> Html Msg

@@ -1,7 +1,8 @@
 module Messages exposing (..)
 
-import Models exposing (Form, Token)
+import Models exposing (Form, Token, User)
 import Navigation exposing (Location)
+import RemoteData exposing (WebData)
 import Routes exposing (Route)
 
 
@@ -13,5 +14,10 @@ type Msg
     | Login
     | Logout
     | SignUp
-    | OnUserSignUp String
-    | OnUserLogin Token
+    | OnFetchAccount (WebData ())
+    | OnFetchToken (WebData Token)
+    | OnFetchUser (WebData User)
+    | OnLoadToken (Maybe Token)
+
+
+
