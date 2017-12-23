@@ -37,10 +37,10 @@ reroute model =
 andThen : (a -> ( b, List c )) -> ( a, List c ) -> ( b, List c )
 andThen apply ( a, c ) =
     let
-        ( b, c ) =
+        ( b, d ) =
             apply a
     in
-        ( b, c ++ c )
+        ( b, c ++ d )
 
 
 updateRoute : Route -> Model -> ( Model, List (Cmd msg) )
