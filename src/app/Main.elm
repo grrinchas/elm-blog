@@ -18,7 +18,6 @@ main = Navigation.program OnLocationChange
         }
 
 
-
 reroute: Model -> (Model, List (Cmd msg))
 reroute model =
     case (model.route, model.user) of
@@ -33,7 +32,6 @@ reroute model =
 
         _ ->
             (model, [Cmd.none])
-
 
 
 
