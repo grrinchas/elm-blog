@@ -15,7 +15,7 @@ layout header main =
 
 
 withLoader : Html msg -> Html msg
-withLoader view = div [class "with-loader"] [view, loading]
+withLoader view = div [class "full-height"] [view, loading]
 
 
 loaderPart : String -> Html msg

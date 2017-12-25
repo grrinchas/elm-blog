@@ -39,25 +39,19 @@ createPost model =
         Failure err -> error err
 
 
-error : a -> Html msg
-error err =
-    Components.error err
 
 
 login : Model -> Html Msg
 login model =
     case RemoteData.append model.token model.user of
-        NotAsked ->
-            Components.login model.form
+        NotAsked -> Components.login model.form
 
         Loading ->
             withLoader <| Components.login model.form
 
-        Success a ->
-            landing model
+        Success _ -> landing model
 
-        Failure err ->
-            error err
+        Failure err -> error err
 
 
 signUp : Model -> Html Msg
@@ -74,6 +68,12 @@ signUp model =
 
         Failure err ->
             error err
+
+
+error : a -> Html msg
+error err =
+    Components.error err
+
 
 
 view : Model -> Html Msg

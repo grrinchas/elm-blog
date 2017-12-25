@@ -45,13 +45,15 @@ type alias Model =
 initialModel : Model
 initialModel =
     { posts = List.range 1 10 |> List.map toString |> List.map initialPost
-    , form = { email = "", password = "", passwordAgain = "", postTitle = "", postBody = "" }
+    , form = initialForm
     , route = HomeRoute
     , user = NotAsked
     , token = NotAsked
     , account = NotAsked
     }
 
+initialForm : Form
+initialForm =  { email = "", password = "", passwordAgain = "", postTitle = "", postBody = "" }
 
 initialPost : String -> Post
 initialPost id =
@@ -59,3 +61,4 @@ initialPost id =
     , title = Lorem.sentence 4
     , body = Lorem.paragraphs 2 |> String.concat
     }
+

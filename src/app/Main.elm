@@ -7,7 +7,7 @@ import Navigation exposing (Location, modifyUrl)
 import Pages
 import Persistence
 import Platform.Cmd exposing (batch)
-import RemoteData exposing (RemoteData(Loading, Success), WebData)
+import RemoteData exposing (RemoteData(Failure, Loading, NotAsked, Success), WebData, isSuccess)
 import Routes exposing (..)
 
 
@@ -27,23 +27,23 @@ init token location =
            | token = Maybe.map RemoteData.succeed token |> Maybe.withDefault RemoteData.NotAsked
            , route = parseLocation location
        }
-
     in
-       let _ = Debug.log "Initial token: " model.token  in
-    fetchUser model |> Tuple.mapSecond batch
-
+        fetchUser model |> Tuple.mapSecond batch
 
 
 reroute : Model -> ( Model, List (Cmd msg) )
 reroute model =
-    case ( model.route, RemoteData.isSuccess model.user ) of
-        ( LoginRoute, True ) ->
+    case ( model.route, isSuccess model.user, isSuccess model.account) of
+        ( SignUpRoute, False, True) ->
+            ( { model | account = RemoteData.NotAsked }, [ Navigation.newUrl <| path LoginRoute ] )
+
+        ( LoginRoute, True,  _) ->
             ( model, [ Navigation.modifyUrl <| path HomeRoute ] )
 
-        ( SignUpRoute, True ) ->
+        ( SignUpRoute, True,  _) ->
             ( model, [ Navigation.modifyUrl <| path HomeRoute ] )
 
-        ( CreatePostRoute, False ) ->
+        ( CreatePostRoute, False,  _) ->
             ( { model | route = ErrorRoute }, [ Cmd.none ] )
 
         _ ->
@@ -52,12 +52,6 @@ reroute model =
 
 andThen : (a -> ( b, List c )) -> ( a, List c ) -> ( b, List c )
 andThen apply ( a, c ) = let ( b, d ) = apply a in ( b, c ++ d )
-
-
-
-updateRoute : Route -> Model -> ( Model, List (Cmd msg) )
-updateRoute route model =
-    ( model, [ Navigation.newUrl <| path route ] )
 
 
 createPost : Model -> ( Model, List (Cmd msg) )
@@ -72,11 +66,14 @@ createPost model =
         ( { model | posts = (::) post model.posts }, [] )
 
 
-
 resetForm : Model -> ( Model, List (Cmd msg) )
 resetForm model =
-    ( { model | form = { email = "", password = "", passwordAgain = "", postTitle = "", postBody = "" } }, [] )
-
+    case (model.user, model.account) of
+        (Success _, _) ->
+            ({ model| form = initialForm }, [])
+        (_, Success _) ->
+            ({ model| form = initialForm }, [])
+        _ -> (model, [])
 
 
 removeToken : Model -> ( Model, List (Cmd msg) )
@@ -84,15 +81,23 @@ removeToken model = (model, [Persistence.put Nothing])
 
 
 saveToken : Model -> ( Model, List (Cmd msg) )
-saveToken model = let _ = Debug.log "Save token: " model.token in
+saveToken model =
     (model, [Persistence.put <| RemoteData.toMaybe model.token])
+
 
 
 fetchUser : Model -> (Model, List (Cmd Msg))
 fetchUser model =
     case model.token of
-        Success tok -> ( { model | user = RemoteData.Loading}, [Api.fetchUser tok])
+        Success tok ->
+            ( { model | user = RemoteData.Loading}, [Api.fetchUser tok])
+        Failure err ->
+            ( {model | user = RemoteData.Failure err}, [])
         _ -> (model, [])
+
+
+updateRoute : Route -> Model -> (Model, List  (Cmd Msg))
+updateRoute  route model = (model, [Navigation.newUrl <| path route ])
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -129,37 +134,24 @@ update msg model =
             ({ model | token = RemoteData.Loading }, Api.fetchToken model.form)
 
         OnFetchAccount account ->
-            case account of
-                Success _ ->
-                    ( { model | account = account },  [])
-                        |> andThen resetForm
-                        |> andThen (updateRoute LoginRoute)
-                        |> Tuple.mapSecond batch
-                _ ->
-                    ( { model | account = account },  Cmd.none)
-
+            ({ model | account = account }, [])
+                |> andThen resetForm
+                |> andThen reroute
+                |> Tuple.mapSecond batch
 
         OnFetchToken token ->
-                ({model | token = token}, [])
-                    |> andThen saveToken
-                    |> andThen fetchUser
-                    |> Tuple.mapSecond batch
-
-
+            ({ model | token = token }, [])
+                |> andThen saveToken
+                |> andThen fetchUser
+                |> Tuple.mapSecond batch
 
         OnFetchUser user ->
-            case user of
-                Success _ ->
-                    ( { model | user = user},  [] )
-                        |> andThen resetForm
-                        |> andThen reroute
-                        |> Tuple.mapSecond batch
-                _ ->
-                    ( { model | user = user},  Cmd.none)
-
+            ({ model | user = user },  [] )
+                |> andThen resetForm
+                |> andThen reroute
+                |> Tuple.mapSecond batch
 
         OnLoadToken token ->
-            let _ = Debug.log "ON LOAD TOKEN: " token in
             ( { model | token = Maybe.map RemoteData.succeed token |> Maybe.withDefault RemoteData.NotAsked }, Cmd.none )
 
 
