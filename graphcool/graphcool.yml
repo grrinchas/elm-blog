@@ -1,0 +1,20 @@
+types: ./types.graphql
+functions:
+    authenticate:
+        type: resolver
+        schema: ./src/authentication.graphql
+        handler:
+           code:
+               src: ./src/resolvers/authenticate.js
+               environment:
+                   AUTH0_DOMAIN: nookit.eu.auth0.com
+                   AUTH0_API_IDENTIFIER: elm-blog
+
+permissions:
+  - operation: Post.read
+  - operation: Post.create
+    authenticated: true
+
+
+
+

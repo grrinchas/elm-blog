@@ -47,6 +47,7 @@ loading =
 
 
 
+
 authHeader : Html msg
 authHeader =
     header []
@@ -69,11 +70,16 @@ postCard post =
         [ div [ onClick <| UpdateRoute <| ReadPostRoute post.id, class "card small hoverable grey lighten-4" ]
             [ div [ class "card-content" ]
                 [ span [ class "card-title medium" ]
-                    [ text <| "ID " ++ post.id ++ ": " ++ post.title ]
-                , p [] [ text post.body ]
+                    [ text post.title ]
+                , p [] [ text <| String.left 300 post.body ]
                 ]
             ]
         ]
+
+
+
+
+
 
 
 landingBody : List Post -> Html Msg
@@ -89,8 +95,8 @@ readPostBody post =
     main_ [ class "container" ]
         [ div [ class "row" ]
             [ div [ class "col l6 offset-l3" ]
-                [ h1 [] [ text <| "ID " ++ post.id ++ ": " ++ post.title ]
-                , List.repeat 10 post.body |> List.map (\par -> p [] [ text par ]) |> div []
+                [ h1 [] [ text post.title ]
+                , List.repeat 5 post.body |> List.map (\par -> p [] [ text par ]) |> div []
                 ]
             ]
         ]

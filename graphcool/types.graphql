@@ -1,0 +1,17 @@
+type User @model {
+    id: ID! @isUnique
+    createdAt: DateTime!
+    updatedAt: DateTime!
+    auth0UserId: String! @isUnique
+    email: String! @isUnique
+}
+
+type Post @model {
+    id: ID! @isUnique
+    createdAt: DateTime!
+    updatedAt: DateTime!
+    title: String!
+    body: String!
+}
+
+

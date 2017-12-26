@@ -1,0 +1,10 @@
+type AuthenticationPayload {
+    id: String!
+    token: String!
+}
+
+extend type Mutation {
+    authenticate(accessToken: String!) : AuthenticationPayload
+}
+
+

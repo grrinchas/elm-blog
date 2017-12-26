@@ -10,21 +10,43 @@ import Routes exposing (..)
 
 landing : Model -> Html Msg
 landing model =
-    RemoteData.map userHeader model.user
-        |> RemoteData.withDefault authHeader
-        |> flip layout (landingBody model.posts)
+    case model.posts of
+        NotAsked ->
+            div [] []
+
+        Loading ->
+            withLoader (div [] [])
+
+        Success posts ->
+             RemoteData.map userHeader model.user
+                |> RemoteData.withDefault authHeader
+                |> flip layout (landingBody posts)
+
+        Failure err -> error err
+
 
 
 readPost : String -> Model -> Html Msg
 readPost id model =
-    case List.head <| List.filter (\post -> post.id == id) model.posts of
-        Just post ->
-            RemoteData.map userHeader model.user
-                |> RemoteData.withDefault authHeader
-                |> flip layout (readPostBody post)
+    case model.posts of
+        NotAsked ->
+            div [] []
 
-        Nothing ->
-            error "404 Not Found"
+        Loading ->
+            withLoader (div [] [])
+
+        Success posts ->
+             case List.head <| List.filter (\post -> post.id == id) posts of
+                Just post ->
+                     RemoteData.map userHeader model.user
+                     |> RemoteData.withDefault authHeader
+                     |> flip layout (readPostBody post)
+
+                Nothing ->
+                    error "404 Not Found"
+
+        Failure err -> error err
+
 
 
 createPost : Model -> Html Msg

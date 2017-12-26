@@ -33,7 +33,7 @@ type alias Token =
     }
 
 type alias Model =
-    { posts : List Post
+    { posts : WebData (List Post)
     , form : Form
     , route : Route
     , user : WebData User
@@ -44,7 +44,7 @@ type alias Model =
 
 initialModel : Model
 initialModel =
-    { posts = List.range 1 10 |> List.map toString |> List.map initialPost
+    { posts = NotAsked
     , form = initialForm
     , route = HomeRoute
     , user = NotAsked
@@ -53,12 +53,5 @@ initialModel =
     }
 
 initialForm : Form
-initialForm =  { email = "", password = "", passwordAgain = "", postTitle = "", postBody = "" }
-
-initialPost : String -> Post
-initialPost id =
-    { id = id
-    , title = Lorem.sentence 4
-    , body = Lorem.paragraphs 2 |> String.concat
-    }
+initialForm =  { email = "admin@mail.com", password = "admin", passwordAgain = "admin", postTitle = "", postBody = "" }
 

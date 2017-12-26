@@ -28,7 +28,14 @@ init token location =
            , route = parseLocation location
        }
     in
-        fetchUser model |> Tuple.mapSecond batch
+       fetchPosts model
+            |> andThen fetchUser
+            |> Tuple.mapSecond batch
+
+
+
+fetchPosts: Model -> ( Model, List (Cmd Msg) )
+fetchPosts model = (model, [Api.fetchPosts])
 
 
 reroute : Model -> ( Model, List (Cmd msg) )
@@ -54,18 +61,6 @@ andThen : (a -> ( b, List c )) -> ( a, List c ) -> ( b, List c )
 andThen apply ( a, c ) = let ( b, d ) = apply a in ( b, c ++ d )
 
 
-createPost : Model -> ( Model, List (Cmd msg) )
-createPost model =
-    let
-        post =
-            { id = List.length model.posts + 1 |> toString
-            , title = model.form.postTitle
-            , body = model.form.postBody
-            }
-    in
-        ( { model | posts = (::) post model.posts }, [] )
-
-
 resetForm : Model -> ( Model, List (Cmd msg) )
 resetForm model =
     case (model.user, model.account) of
@@ -74,6 +69,7 @@ resetForm model =
         (_, Success _) ->
             ({ model| form = initialForm }, [])
         _ -> (model, [])
+
 
 
 removeToken : Model -> ( Model, List (Cmd msg) )
@@ -116,10 +112,7 @@ update msg model =
             ( { model | form = form }, Cmd.none )
 
         CreatePost ->
-            createPost model
-                |> andThen resetForm
-                |> andThen (updateRoute HomeRoute)
-                |> Tuple.mapSecond batch
+            ( model, RemoteData.map Api.authenticate model.token |> RemoteData.withDefault Cmd.none)
 
         Logout ->
             ( { model | user = RemoteData.NotAsked }, [] )
@@ -150,6 +143,20 @@ update msg model =
                 |> andThen resetForm
                 |> andThen reroute
                 |> Tuple.mapSecond batch
+
+        OnFetchPosts posts ->
+            ({ model | posts = posts }, Cmd.none )
+
+        OnCreatePost post ->
+             resetForm model
+                 |> andThen fetchPosts
+                 |> andThen (updateRoute HomeRoute)
+                 |> Tuple.mapSecond batch
+
+        OnFetchGraphcoolToken token ->
+                (model, RemoteData.map (Api.createPost model.form ) token |> RemoteData.withDefault Cmd.none)
+
+
 
         OnLoadToken token ->
             ( { model | token = Maybe.map RemoteData.succeed token |> Maybe.withDefault RemoteData.NotAsked }, Cmd.none )
