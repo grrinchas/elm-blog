@@ -157,7 +157,6 @@ update msg model =
                 (model, RemoteData.map (Api.createPost model.form ) token |> RemoteData.withDefault Cmd.none)
 
 
-
         OnLoadToken token ->
             ( { model | token = Maybe.map RemoteData.succeed token |> Maybe.withDefault RemoteData.NotAsked }, Cmd.none )
 
