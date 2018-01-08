@@ -1,7 +1,7 @@
 
 # Elm blog 
 
-This is an simple [Single Page Application](https://www.dennis-grinch.co.uk/elm-blog/) written in Elm language. 
+This is simple [Single Page Application](https://www.dennis-grinch.co.uk/elm-blog/) written in Elm language. 
 
 It shows how to set up development environment, create pages, add routing, persistence, third party authentication and 
 headless CMS.
